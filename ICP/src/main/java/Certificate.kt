@@ -1,5 +1,7 @@
 import org.cryptacular.util.CertUtil
 import org.cryptacular.x509.KeyUsageBits
+import org.cryptacular.x509.dn.NameReader
+import org.cryptacular.x509.dn.StandardAttributeType
 import java.io.File
 import java.security.cert.X509Certificate
 import java.util.*
@@ -22,13 +24,26 @@ import java.util.*
  */
 
 class Certificate() {
-    var name: String = ""
+    var subjectName: String = ""
         internal set
-    var id: String = ""
+    var issuerName: String = ""
+        internal set
+    var personId: String = ""
         internal set
     var notBefore: Date = Date(0)
+        internal set
     var notAfter: Date = Date(0)
+        internal set
     internal var base: X509Certificate? = null
+        internal set
+    var subjectKeyId: String = ""
+        internal set
+    var authorityKeyId: String = ""
+        internal set
+    var fullSubject: String = ""
+        internal set
+    var fullIssuer: String = ""
+        internal set
 
     constructor(path: String) : this() {
         this.loadFromFile(path)
@@ -36,21 +51,21 @@ class Certificate() {
 
     internal fun parseName(str: String) {
         val parts = str.split(":".toRegex(), 2).toTypedArray()
-        this.name = parts[0].trim()
+        this.subjectName = parts[0].trim()
         if (parts.size < 2) {
             return
         }
-        this.id = parts[1].trim()
-        val doc = this.id
+        this.personId = parts[1].trim()
+        val doc = this.personId
 
         // Special formatting for CPF
         if (doc.matches("[0-9]{11}".toRegex())) {
-            this.id = String.format("%s.%s.%s-%s", doc.substring(0, 3), doc.substring(3, 6), doc.substring(6,
+            this.personId = String.format("%s.%s.%s-%s", doc.substring(0, 3), doc.substring(3, 6), doc.substring(6,
                     9), doc.substring(9))
         }
         // Special formatting for CNPJ
         if (doc.matches("[0-9]{14}".toRegex())) {
-            this.id = String.format("%s.%s.%s/%s-%s", doc.substring(0, 2), doc.substring(2, 5), doc.substring(5,
+            this.personId = String.format("%s.%s.%s/%s-%s", doc.substring(0, 2), doc.substring(2, 5), doc.substring(5,
                     8), doc.substring(8, 12), doc.substring(12))
         }
     }
@@ -69,8 +84,24 @@ class Certificate() {
 
     fun loadFromFile(path: String) {
         this.base = CertUtil.readCertificate(File(path).inputStream())
+        if (this.base == null) {
+            return
+        }
         this.parseName(CertUtil.subjectCN(this.base))
         this.notAfter = this.base!!.notAfter!!
         this.notBefore = this.base!!.notBefore!!
+        this.issuerName = NameReader(this.base).readIssuer().getValue(StandardAttributeType.CommonName)
+        this.fullSubject = NameReader(this.base).readIssuer().toString()
+        this.fullIssuer = NameReader(this.base).readIssuer().toString()
+        try {
+            this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
+        } catch (e: Exception) {
+            this.subjectKeyId = this.issuerName + "-" + this.base!!.serialNumber.toString(10)
+        }
+        try {
+            this.authorityKeyId = CertUtil.authorityKeyId(this.base).toUpperCase()
+        } catch (e: Exception) {
+            this.authorityKeyId = this.issuerName
+        }
     }
 }

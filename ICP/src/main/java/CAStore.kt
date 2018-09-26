@@ -1,3 +1,8 @@
+import java.security.KeyStore
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
+
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -15,5 +20,21 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-public class CAStore {
+class CAStore() {
+    // The lack of a password is not a problem, as the keystore should remain always in memory
+    internal var protection = KeyStore.PasswordProtection("".toCharArray())
+    internal var store : KeyStore
+
+    init {
+        this.store = KeyStore.Builder.newInstance("PKCS12", null, this.protection).keyStore
+    }
+
+    fun addCA(cert: Certificate): Boolean {
+        var entry = KeyStore.TrustedCertificateEntry(cert.base)
+//        var alias = cert.
+//        this.store.setEntry("Root-V1", entry)
+
+
+        return false
+    }
 }
