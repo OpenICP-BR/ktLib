@@ -54,7 +54,7 @@ class CertificateTest {
         assertEquals("Autoridade Certificadora Raiz Brasileira v1", cert.subjectName)
         assertEquals("Autoridade Certificadora Raiz Brasileira v1", cert.issuerName)
         assertEquals("42:B2:2C:5C:74:01:07:BE:9B:FF:55:33:3B:EE:29:BB:5D:91:BF:06", cert.subjectKeyId)
-        assertEquals("Autoridade Certificadora Raiz Brasileira v1", cert.authorityKeyId)
+        assertEquals("", cert.authorityKeyId)
         assertEquals("C=BR, O=ICP-Brasil, OU=Instituto Nacional de Tecnologia da Informacao - ITI, CN=Autoridade " +
                 "Certificadora Raiz Brasileira v1", cert.fullIssuer)
         assertEquals("C=BR, O=ICP-Brasil, OU=Instituto Nacional de Tecnologia da Informacao - ITI, CN=Autoridade " +

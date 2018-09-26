@@ -3,6 +3,7 @@ import org.cryptacular.x509.KeyUsageBits
 import org.cryptacular.x509.dn.NameReader
 import org.cryptacular.x509.dn.StandardAttributeType
 import java.io.File
+import java.io.InputStream
 import java.security.cert.X509Certificate
 import java.util.*
 
@@ -34,7 +35,7 @@ class Certificate() {
         internal set
     var notAfter: Date = Date(0)
         internal set
-    internal var base: X509Certificate? = null
+    var subjectAliasId: String = ""
         internal set
     var subjectKeyId: String = ""
         internal set
@@ -44,9 +45,14 @@ class Certificate() {
         internal set
     var fullIssuer: String = ""
         internal set
+    internal var base: X509Certificate? = null
 
     constructor(path: String) : this() {
         this.loadFromFile(path)
+    }
+
+    constructor(stream: InputStream) : this() {
+        this.loadFromStream(stream)
     }
 
     internal fun parseName(str: String) {
@@ -83,7 +89,11 @@ class Certificate() {
     }
 
     fun loadFromFile(path: String) {
-        this.base = CertUtil.readCertificate(File(path).inputStream())
+        this.loadFromStream(File(path).inputStream())
+    }
+
+    fun loadFromStream(stream: InputStream) {
+        this.base = CertUtil.readCertificate(stream)
         if (this.base == null) {
             return
         }
@@ -95,13 +105,15 @@ class Certificate() {
         this.fullIssuer = NameReader(this.base).readIssuer().toString()
         try {
             this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
+            this.subjectAliasId = this.subjectKeyId
         } catch (e: Exception) {
-            this.subjectKeyId = this.issuerName + "-" + this.base!!.serialNumber.toString(10)
+            this.subjectKeyId = ""
+            this.subjectAliasId = this.issuerName + "-" + this.base!!.serialNumber.toString(10)
         }
         try {
             this.authorityKeyId = CertUtil.authorityKeyId(this.base).toUpperCase()
         } catch (e: Exception) {
-            this.authorityKeyId = this.issuerName
+            this.authorityKeyId = ""
         }
     }
 }

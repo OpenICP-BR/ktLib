@@ -1,7 +1,4 @@
 import java.security.KeyStore
-import javax.net.ssl.TrustManager
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 
 /*
  * Copyright (c) 2018 G. Queiroz.
@@ -27,14 +24,14 @@ class CAStore() {
 
     init {
         this.store = KeyStore.Builder.newInstance("PKCS12", null, this.protection).keyStore
+        this.forceAddCA(getRootCert("v1"))
+        this.forceAddCA(getRootCert("v2"))
+        this.forceAddCA(getRootCert("v5"))
     }
 
-    fun addCA(cert: Certificate): Boolean {
+    internal fun forceAddCA(cert: Certificate) {
         var entry = KeyStore.TrustedCertificateEntry(cert.base)
-//        var alias = cert.
-//        this.store.setEntry("Root-V1", entry)
-
-
-        return false
+        this.store.setEntry(cert.subjectAliasId, entry, protection)
+        System.out.println(this.store.size())
     }
 }
