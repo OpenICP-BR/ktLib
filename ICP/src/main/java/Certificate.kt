@@ -1,12 +1,3 @@
-import org.cryptacular.util.CertUtil
-import org.cryptacular.x509.KeyUsageBits
-import org.cryptacular.x509.dn.NameReader
-import org.cryptacular.x509.dn.StandardAttributeType
-import java.io.File
-import java.io.InputStream
-import java.security.cert.X509Certificate
-import java.util.*
-
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -24,7 +15,18 @@ import java.util.*
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import org.cryptacular.util.CertUtil
+import org.cryptacular.x509.KeyUsageBits
+import org.cryptacular.x509.dn.NameReader
+import org.cryptacular.x509.dn.StandardAttributeType
+import java.io.File
+import java.io.InputStream
+import java.security.cert.X509Certificate
+import java.util.*
+
 class Certificate() {
+    var serial: String = ""
+        internal set
     var subjectName: String = ""
         internal set
     var issuerName: String = ""
@@ -35,8 +37,6 @@ class Certificate() {
         internal set
     var notAfter: Date = Date(0)
         internal set
-    var subjectAliasId: String = ""
-        internal set
     var subjectKeyId: String = ""
         internal set
     var authorityKeyId: String = ""
@@ -46,6 +46,11 @@ class Certificate() {
     var fullIssuer: String = ""
         internal set
     internal var base: X509Certificate? = null
+
+    constructor(raw_cert: X509Certificate) : this() {
+        this.base = raw_cert
+        this.finishParsing()
+    }
 
     constructor(path: String) : this() {
         this.loadFromFile(path)
@@ -66,13 +71,20 @@ class Certificate() {
 
         // Special formatting for CPF
         if (doc.matches("[0-9]{11}".toRegex())) {
-            this.personId = String.format("%s.%s.%s-%s", doc.substring(0, 3), doc.substring(3, 6), doc.substring(6,
-                    9), doc.substring(9))
+            this.personId = String.format("%s.%s.%s-%s",
+                    doc.substring(0, 3),
+                    doc.substring(3, 6),
+                    doc.substring(6, 9),
+                    doc.substring(9))
         }
         // Special formatting for CNPJ
         if (doc.matches("[0-9]{14}".toRegex())) {
-            this.personId = String.format("%s.%s.%s/%s-%s", doc.substring(0, 2), doc.substring(2, 5), doc.substring(5,
-                    8), doc.substring(8, 12), doc.substring(12))
+            this.personId = String.format("%s.%s.%s/%s-%s",
+                    doc.substring(0, 2),
+                    doc.substring(2, 5),
+                    doc.substring(5, 8),
+                    doc.substring(8, 12),
+                    doc.substring(12))
         }
     }
 
@@ -97,6 +109,10 @@ class Certificate() {
         if (this.base == null) {
             return
         }
+        finishParsing()
+    }
+
+    internal fun finishParsing() {
         this.parseName(CertUtil.subjectCN(this.base))
         this.notAfter = this.base!!.notAfter!!
         this.notBefore = this.base!!.notBefore!!
@@ -105,10 +121,13 @@ class Certificate() {
         this.fullIssuer = NameReader(this.base).readIssuer().toString()
         try {
             this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
-            this.subjectAliasId = this.subjectKeyId
         } catch (e: Exception) {
             this.subjectKeyId = ""
-            this.subjectAliasId = this.issuerName + "-" + this.base!!.serialNumber.toString(10)
+        }
+        try {
+            this.serial = this.base!!.serialNumber.toString(10)
+        } catch (e: Exception) {
+            this.serial = ""
         }
         try {
             this.authorityKeyId = CertUtil.authorityKeyId(this.base).toUpperCase()

@@ -1,5 +1,3 @@
-import java.security.KeyStore
-
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -18,20 +16,69 @@ import java.security.KeyStore
  */
 
 class CAStore() {
-    // The lack of a password is not a problem, as the keystore should remain always in memory
-    internal var protection = KeyStore.PasswordProtection("".toCharArray())
-    internal var store : KeyStore
+    internal var cas : HashMap<String, Certificate> = HashMap()
 
     init {
-        this.store = KeyStore.Builder.newInstance("PKCS12", null, this.protection).keyStore
         this.forceAddCA(getRootCert("v1"))
         this.forceAddCA(getRootCert("v2"))
         this.forceAddCA(getRootCert("v5"))
     }
 
     internal fun forceAddCA(cert: Certificate) {
-        var entry = KeyStore.TrustedCertificateEntry(cert.base)
-        this.store.setEntry(cert.subjectAliasId, entry, protection)
-        System.out.println(this.store.size())
+        this.cas[cert.fullSubject] = cert
+        if (cert.subjectKeyId != "") {
+            this.cas[cert.subjectKeyId] = cert
+        }
+    }
+
+    internal fun getIssuer(cert: Certificate): Certificate {
+        if (cert.authorityKeyId != "" && cert.authorityKeyId in this.cas) {
+            return this.cas[cert.authorityKeyId]!!
+        }
+        if (cert.fullIssuer in this.cas) {
+            return this.cas[cert.fullIssuer]!!
+        }
+        throw NoSuchElementException("cert.authorityKeyId = "+cert.authorityKeyId+" cert.fullIssuer = "+cert.fullIssuer)
+    }
+
+    internal fun getPath(cert: Certificate): Array<Certificate> {
+        var ans = arrayOf<Certificate>(cert)
+        if (cert.isSelfSigned()) {
+            ans += cert
+            return ans
+        }
+        var issuer = getIssuer(cert)
+        ans += getPath(issuer)
+        return ans
+    }
+
+    fun verifyCert(cert: Certificate) {
+        var path = getPath(cert)
+
+        // Implement verification logic
+        for (i in 0..path.size-2) {
+            path[i].base!!.verify(path[i + 1].base!!.publicKey)
+        }
+    }
+
+    fun verifyCertBool(cert: Certificate): Boolean {
+        try {
+            verifyCert(cert)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    fun addCA(cert: Certificate): Boolean {
+        if (!cert.isCA()) {
+            return false
+        }
+        if (!this.verifyCertBool(cert)) {
+            return false
+        }
+
+        forceAddCA(cert)
+        return true
     }
 }

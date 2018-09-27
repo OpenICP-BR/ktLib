@@ -1,8 +1,3 @@
-import org.bouncycastle.util.encoders.Hex
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -19,6 +14,10 @@ import org.junit.jupiter.api.TestInstance
  * You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RootCAsTest {
@@ -60,5 +59,21 @@ class RootCAsTest {
         assertThrows(java.lang.IllegalArgumentException::class.java) {
             getRootCert("other")
         }
+    }
+
+    @Test
+    fun verifyCert_1() {
+        var store = CAStore()
+        var cert_final = Certificate("res/certs/AC_OAB_G3.crt")
+        var cert_intermediate = Certificate("res/certs/AC_Certisign_G7.crt")
+
+        assertThrows(NoSuchElementException::class.java) {
+            store.verifyCert(cert_final)
+        }
+
+        assertFalse(store.verifyCertBool(cert_final))
+        assertTrue(store.verifyCertBool(cert_intermediate))
+        assertTrue(store.addCA(cert_intermediate))
+        assertTrue(store.verifyCertBool(cert_final))
     }
 }

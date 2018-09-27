@@ -1,5 +1,3 @@
-import java.io.ByteArrayInputStream
-
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -17,9 +15,11 @@ import java.io.ByteArrayInputStream
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import java.io.ByteArrayInputStream
+
 fun getRootCert(name: String): Certificate {
     var stream: ByteArrayInputStream
-    if (name == "V1") {
+    if (name.toUpperCase() == "V1") {
         stream = ByteArrayInputStream(("-----BEGIN CERTIFICATE-----\n" +
                 "MIIEgDCCA2igAwIBAgIBATANBgkqhkiG9w0BAQUFADCBlzELMAkGA1UEBhMCQlIx\n" +
                 "EzARBgNVBAoTCklDUC1CcmFzaWwxPTA7BgNVBAsTNEluc3RpdHV0byBOYWNpb25h\n" +
@@ -47,7 +47,7 @@ fun getRootCert(name: String): Certificate {
                 "wdCuaU4eo9mzh1facMJafYfN+b833u1WNfe3Ig5Pkrg/CN+cnphe8m+5+pss+M1F\n" +
                 "2HKyIA==\n" +
                 "-----END CERTIFICATE-----").toByteArray())
-    } else if (name == "V2") {
+    } else if (name.toUpperCase() == "V2") {
         stream = ByteArrayInputStream(("-----BEGIN CERTIFICATE-----\n" +
                 "MIIGoTCCBImgAwIBAgIBATANBgkqhkiG9w0BAQ0FADCBlzELMAkGA1UEBhMCQlIx\n" +
                 "EzARBgNVBAoTCklDUC1CcmFzaWwxPTA7BgNVBAsTNEluc3RpdHV0byBOYWNpb25h\n" +
@@ -86,7 +86,7 @@ fun getRootCert(name: String): Certificate {
                 "cIf/by0PEf0e//eFMBUO4xcx7ieVzMnpmR6Xx21bB7UFaj3yRd+6gnkkcC6bgh9m\n" +
                 "qaVtJ8z2KqLRX4Vv4EadqtKlTlUO\n" +
                 "-----END CERTIFICATE-----").toByteArray())
-    } else if (name == "V5") {
+    } else if (name.toUpperCase() == "V5") {
         stream = ByteArrayInputStream(("-----BEGIN CERTIFICATE-----\n" +
                 "MIIGoTCCBImgAwIBAgIBATANBgkqhkiG9w0BAQ0FADCBlzELMAkGA1UEBhMCQlIx\n" +
                 "EzARBgNVBAoMCklDUC1CcmFzaWwxPTA7BgNVBAsMNEluc3RpdHV0byBOYWNpb25h\n" +
