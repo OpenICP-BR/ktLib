@@ -30,19 +30,27 @@ class KeyAndCert {
         this.key = new_key
     }
 
-    constructor(path: String, password: String) {
+    constructor(path: String, password: String) : this(path, password, password) {
+    }
+
+    constructor(path: String, password: String, password_key: String) {
         var p12 = KeyStore.getInstance("pkcs12")
         p12.load(FileInputStream(path), password.toCharArray())
         var e = p12.aliases()
+        var got = false
         while (e.hasMoreElements()) {
             val alias = e.nextElement() as String
             val c = Certificate(p12.getCertificate(alias) as X509Certificate)
-            if (c.isCA()) {
-                continue
-            }
             this.cert = c
-            val k = p12.getKey(alias, password.toCharArray())
+            val k = p12.getKey(alias, password_key.toCharArray())
             this.key = k as PrivateKey
+            got = true
+            // We only need one certificate and key
+            break
+        }
+
+        if (!got) {
+            throw Exception("not certificate and private key found")
         }
     }
 }
