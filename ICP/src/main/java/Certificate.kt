@@ -117,7 +117,7 @@ class Certificate() {
         this.notAfter = this.base!!.notAfter!!
         this.notBefore = this.base!!.notBefore!!
         this.issuerName = NameReader(this.base).readIssuer().getValue(StandardAttributeType.CommonName)
-        this.fullSubject = NameReader(this.base).readIssuer().toString()
+        this.fullSubject = NameReader(this.base).readSubject().toString()
         this.fullIssuer = NameReader(this.base).readIssuer().toString()
         try {
             this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
