@@ -15,42 +15,57 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import org.bouncycastle.cert.X509CertificateHolder
 import java.io.FileInputStream
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
+import java.security.KeyPair
+
 
 class KeyAndCert {
     lateinit var cert : Certificate
         internal set
-    internal var key : PrivateKey? = null
+    internal var privateKey : PrivateKey? = null
+    internal var keyPair : KeyPair? = null
+        get() = KeyPair(this.cert.base!!.publicKey, this.privateKey)
+
+    constructor(new_cert: X509CertificateHolder, new_key: PrivateKey) {
+        val bytes = new_cert.toASN1Structure().toASN1Primitive().encoded
+        this.cert = Certificate(bytes.inputStream())
+        this.privateKey = new_key
+    }
 
     constructor(new_cert: Certificate, new_key: PrivateKey) {
         this.cert = new_cert
-        this.key = new_key
+        this.privateKey = new_key
+    }
+
+    fun hasKey(): Boolean {
+        return this.privateKey != null
     }
 
     constructor(path: String, password: String) : this(path, password, password) {
     }
 
     constructor(path: String, password: String, password_key: String) {
-        var p12 = KeyStore.getInstance("pkcs12")
+        val p12 = KeyStore.getInstance("pkcs12")
         p12.load(FileInputStream(path), password.toCharArray())
-        var e = p12.aliases()
+        val e = p12.aliases()
         var got = false
         while (e.hasMoreElements()) {
             val alias = e.nextElement() as String
             val c = Certificate(p12.getCertificate(alias) as X509Certificate)
             this.cert = c
             val k = p12.getKey(alias, password_key.toCharArray())
-            this.key = k as PrivateKey
+            this.privateKey = k as PrivateKey
             got = true
             // We only need one certificate and key
             break
         }
 
         if (!got) {
-            throw Exception("not certificate and private key found")
+            throw Exception("failed to find certificate and private key")
         }
     }
 }
