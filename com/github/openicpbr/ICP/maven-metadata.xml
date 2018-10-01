@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-  <groupId>io.github.openicp-br</groupId>
+  <groupId>com.github.openicpbr</groupId>
   <artifactId>ICP</artifactId>
   <versioning>
     <versions>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.3-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20181001122542</lastUpdated>
+    <lastUpdated>20181001125559</lastUpdated>
   </versioning>
 </metadata>
