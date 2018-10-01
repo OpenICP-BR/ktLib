@@ -1,4 +1,4 @@
-package ICP.openicpbr.github.com
+package com.openicpbr.github.ICP
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.*
 import org.bouncycastle.cert.X509v3CertificateBuilder
