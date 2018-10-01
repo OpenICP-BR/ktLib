@@ -1,4 +1,4 @@
-package com.openicpbr.github.ICP
+package com.github.openicpbr.ICP
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
