@@ -3,9 +3,11 @@
   <groupId>com.github.OpenICP_BR</groupId>
   <artifactId>ICP</artifactId>
   <versioning>
+    <release>0.0.5</release>
     <versions>
       <version>0.0.4-SNAPSHOT</version>
+      <version>0.0.5</version>
     </versions>
-    <lastUpdated>20181001170438</lastUpdated>
+    <lastUpdated>20181005152807</lastUpdated>
   </versioning>
 </metadata>
