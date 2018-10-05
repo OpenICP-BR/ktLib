@@ -1,7 +1,5 @@
 package com.github.OpenICP_BR.ICP
 
-import com.xenomachina.argparser.InvalidArgumentException
-
 /*
  * Copyright (c) 2018 G. Queiroz.
  *

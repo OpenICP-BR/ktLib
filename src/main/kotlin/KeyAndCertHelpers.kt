@@ -1,4 +1,5 @@
 package com.github.OpenICP_BR.ICP
+
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.*
 import org.bouncycastle.cert.X509v3CertificateBuilder
@@ -11,24 +12,6 @@ import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
-
-/*
- * Copyright (c) 2018 G. Queiroz.
- *
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Affero General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
- *
- * This program is distributed in the hope that it will be useful,  but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
- * for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 
 val TESTING_ROOT_CA_SUBJECT = "C=BR, CN=FakeICP - SEM VALOR LEGAL"
 
