@@ -1,5 +1,7 @@
 package com.github.OpenICP_BR.ICP
 
+import com.xenomachina.argparser.InvalidArgumentException
+
 /*
  * Copyright (c) 2018 G. Queiroz.
  *
@@ -78,6 +80,18 @@ class CAStore() {
         }
         if (!this.verifyCertBool(cert)) {
             return false
+        }
+
+        forceAddCA(cert)
+        return true
+    }
+
+    fun addTestingCA(cert: Certificate): Boolean {
+        if (!cert.isCA()) {
+            return false
+        }
+        if (cert.fullSubject != TESTING_ROOT_CA_SUBJECT || cert.fullIssuer != TESTING_ROOT_CA_SUBJECT) {
+            throw IllegalArgumentException("Testing CAs MUST be: "+ TESTING_ROOT_CA_SUBJECT)
         }
 
         forceAddCA(cert)

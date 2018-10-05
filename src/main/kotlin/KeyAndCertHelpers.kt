@@ -8,6 +8,8 @@ import org.cryptacular.generator.KeyPairGenerator
 import java.math.BigInteger
 import java.security.KeyPair
 import java.security.SecureRandom
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 
 /*
@@ -29,6 +31,14 @@ import java.util.*
 
 
 val TESTING_ROOT_CA_SUBJECT = "C=BR, CN=FakeICP - SEM VALOR LEGAL"
+
+fun newTestRootCA(): KeyAndCert {
+    val now = LocalDate.now()
+    val end = now.plusYears(1)
+    return newTestRootCA(
+            Date.from(now.atStartOfDay(ZoneId.of("GMT")).toInstant()),
+            Date.from(end.atStartOfDay(ZoneId.of("GMT")).toInstant()))
+}
 
 fun newTestRootCA(not_before: Date, not_after: Date): KeyAndCert {
     return newCert(TESTING_ROOT_CA_SUBJECT, TESTING_ROOT_CA_SUBJECT, null, true, false, not_before, not_after)

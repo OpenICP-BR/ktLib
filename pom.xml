@@ -6,7 +6,7 @@
 
     <groupId>com.github.OpenICP_BR</groupId>
     <artifactId>ICP</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5</version>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
