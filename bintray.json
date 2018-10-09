@@ -2,7 +2,7 @@
   "package": {
     "name": "auto-upload",
     "repo": "mvn",
-    "subject": "myBintrayUser",
+    "subject": "gjvnq",
     "desc": "I was pushed completely automatically",
     "issue_tracker_url": "https://github.com/OpenICP-BR/ktApp/issues",
     "vcs_url": "https://github.com/OpenICP-BR/ktApp.git",
@@ -27,8 +27,7 @@
 
   "files":
   [
-    {"includePattern": "build/bin(.*)*/(.*\\.gem)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "gems/$2"},
-    {"includePattern": "build/docs/(.*)", "uploadPattern": "docs/$1"}
+    {"includePattern": "target/(.*)", "excludePattern": "target/.*.zip$", "uploadPattern": "/$1"}
   ],
   "publish": true
 }

@@ -1,12 +1,13 @@
 language: java
 sudo: false
 jdk:
-- oraclejdk10
 - openjdk10
 addons:
   artifacts: true
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+script:
+  - mvn deploy -Dmaven.online-deploy.skip=true
 deploy:
   provider: bintray
   user: gjvnq
