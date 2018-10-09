@@ -2,8 +2,6 @@ language: java
 sudo: false
 jdk:
 - openjdk10
-addons:
-  artifacts: true
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 script:
@@ -12,5 +10,6 @@ deploy:
   provider: bintray
   user: gjvnq
   file: bintray.json
+  skip_cleanup: true
   key:
     secure: tg3eu0QO4ZUox+TK0vxvFhE0BhmREzp+HKjpy2+WEUvupXPK53OUk8kGo01Ifvv3jxbhdoW8KbzarVQZbX4sbV0V8DyRhyep8poow6bByRttEPqDzy8r7T8pAG5ud4czmMBekDwZuw/eQqSSHER7fI0+ChtCt6FyXdBbbTV5uTOJT4LfKTPHFR6SKS8ETG22RIhlIR5nIac/+hrBL/1vLd2wOGqxeGj7SfV9U93Q7pWpj9OOgVnKhRUjgZp7KBVerHdIhBI3kbVTPd/+UHvsEtNf1GjBvgnmpqR+4ZbPyZWkTKPv/r9UX5hMrot5DWtpLk8zyo6wL1qPV2MoD9xWg3in+9GGuF+Zpq+WvMfLpLDb5y5Rkh3upF7U/hgsW3yObtOSFv8QT8ZF2PzYTpt40pXceijIBs0PU94gwIgksNmjXBg7H5AabZyZrIVghYVfp8uQ8MaOR585Ew9pzoXt33ft7xr1bl8AWo1YY3zL2ric00UGnztPzw+6jbh33fTdoemqute8v723urMYor8Qv4t39buKOnH1gqpuGcgbMuvWrmoN8I0Tf5+kVSgKzChx8RBUaHg/p2+3M2pn9w+u6tPEv4yk/6Qh1edF5Py8WWWkjDI6YKVrqWbhzae9yYN5WcTCxM6qKbLINut6czB/BQPmzZGf3L3kcJBl/80uQYU=
