@@ -1,7 +1,8 @@
 language: java
+dist: trusty
 sudo: false
 jdk:
-- openjdk10
+- openjdk8
 after_success:
 - mvn test
 - bash <(curl -s https://codecov.io/bash)
