@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/OpenICP-BR/ktLib.svg?branch=master)](https://travis-ci.com/OpenICP-BR/ktLib)
 [![Code Coverage](https://codecov.io/gh/OpenICP-BR/ktLib/branch/master/graph/badge.svg)](https://codecov.io/gh/OpenICP-BR/ktLib)
-![Semantic Version](https://img.shields.io/badge/semver-0.0.5-blue.svg)
+[![Download](https://api.bintray.com/packages/gjvnq/mvn/ktLib/images/download.svg)](https://bintray.com/gjvnq/mvn/ktLib/_latestVersion)
 ![JRE Version](https://img.shields.io/badge/jre-10-lightgrey.svg)
 [![LGPL License](https://img.shields.io/badge/license-LGPL-green.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 [![Doar](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M5A72UW7FF87W)
@@ -17,19 +17,19 @@ A simple Kotlin library for [CAdES](https://en.wikipedia.org/wiki/CAdES_(computi
 <dependencies>
     <dependency>
         <groupId>com.github.OpenICP_BR</groupId>
-        <artifactId>ICP</artifactId>
-        <version>0.0.5</version>
+        <artifactId>ktLib</artifactId>
+        <version>0.0.7</version>
     </dependency>
 </dependencies>
 ....
 <repositories>
     <repository>
-        <id>LibOpenICP-BR-mvn-repo</id>
-        <url>https://raw.github.com/OpenICP-BR/ktLib/mvn-repo/</url>
         <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
+            <enabled>false</enabled>
         </snapshots>
+        <id>bintray-gjvnq-mvn</id>
+        <name>bintray</name>
+        <url>https://dl.bintray.com/gjvnq/mvn</url>
     </repository>
 </repositories>
 ```

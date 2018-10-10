@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>bintray-gjvnq-mvn</id>
+            <username>gjvnq</username>
+            <password>${env.BINTRAY_PASSWORD}</password>
+        </server>
+    </servers>
+</settings>

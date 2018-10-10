@@ -4,7 +4,6 @@ sudo: false
 jdk:
 - openjdk8
 after_success:
-- mvn test
 - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
