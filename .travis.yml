@@ -3,11 +3,12 @@ dist: trusty
 sudo: false
 jdk:
 - openjdk8
+
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script: mvn deploy -DskipTests
+  script: cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -DskipTests
   skip_cleanup: true
   on:
     tags: true
