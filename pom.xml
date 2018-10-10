@@ -6,7 +6,7 @@
 
     <groupId>com.github.OpenICP_BR</groupId>
     <artifactId>ktLib</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>

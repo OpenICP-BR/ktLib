@@ -1,4 +1,4 @@
-package com.github.OpenICP_BR.ICP
+package com.github.OpenICP_BR.ktLib
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

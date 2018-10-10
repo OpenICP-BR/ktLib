@@ -1,4 +1,4 @@
-package com.github.OpenICP_BR.ICP
+package com.github.OpenICP_BR.ktLib
 
 import org.bouncycastle.cert.X509CertificateHolder
 import java.io.FileInputStream

@@ -1,4 +1,4 @@
-package com.github.OpenICP_BR.ICP
+package com.github.OpenICP_BR.ktLib
 
 import org.cryptacular.util.CertUtil
 import org.cryptacular.x509.KeyUsageBits

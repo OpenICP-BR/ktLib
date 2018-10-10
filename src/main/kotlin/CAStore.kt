@@ -1,4 +1,4 @@
-package com.github.OpenICP_BR.ICP
+package com.github.OpenICP_BR.ktLib
 
 /*
  * Copyright (c) 2018 G. Queiroz.

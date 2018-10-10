@@ -18,7 +18,7 @@ A simple Kotlin library for [CAdES](https://en.wikipedia.org/wiki/CAdES_(computi
     <dependency>
         <groupId>com.github.OpenICP_BR</groupId>
         <artifactId>ktLib</artifactId>
-        <version>0.0.7</version>
+        <version>0.0.8</version>
     </dependency>
 </dependencies>
 ....
