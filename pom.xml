@@ -6,10 +6,16 @@
 
     <groupId>com.github.OpenICP_BR</groupId>
     <artifactId>ktLib</artifactId>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>res</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -57,7 +63,7 @@
                 </executions>
                 <configuration>
                     <source>10</source>
-                    <target>10</target>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <plugin>

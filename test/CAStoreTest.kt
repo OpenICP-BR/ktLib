@@ -1,9 +1,11 @@
-package com.github.OpenICP_BR.ktLib
+package test
 
+import com.github.OpenICP_BR.ktLib.CAStore
+import com.github.OpenICP_BR.ktLib.Certificate
+import com.github.OpenICP_BR.ktLib.newTestRootCA
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CAStoreTest {

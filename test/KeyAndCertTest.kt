@@ -1,5 +1,9 @@
-package com.github.OpenICP_BR.ktLib
+package test
 
+import com.github.OpenICP_BR.ktLib.KeyAndCert
+import com.github.OpenICP_BR.ktLib.TESTING_ROOT_CA_SUBJECT
+import com.github.OpenICP_BR.ktLib.newCert
+import com.github.OpenICP_BR.ktLib.newTestRootCA
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
