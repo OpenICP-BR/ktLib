@@ -1,4 +1,4 @@
-package test
+package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.KeyAndCert
 import com.github.OpenICP_BR.ktLib.TESTING_ROOT_CA_SUBJECT
@@ -13,7 +13,7 @@ import java.util.*
 class KeyAndCertTest {
     @Test
     fun get_pfx_1() {
-        var p12 = KeyAndCert("res/pfx/beltrano.p12", "beltrano")
+        var p12 = KeyAndCert("test/res/pfx/beltrano.p12", "beltrano")
         assertEquals("C=BR, ST=FN, O=FakeBank, CN=FakeBank", p12.cert.fullIssuer)
         assertEquals("C=BR, ST=FN, L=Ilha, O=FakePKI, CN=Beltrano Freitas:41951116844, " +
                 "EMAILADDRESS=beltrano@exemple.com", p12.cert.fullSubject)

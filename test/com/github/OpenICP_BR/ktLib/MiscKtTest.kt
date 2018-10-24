@@ -1,4 +1,4 @@
-package test
+package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.ICPVersion
 import org.junit.jupiter.api.Test

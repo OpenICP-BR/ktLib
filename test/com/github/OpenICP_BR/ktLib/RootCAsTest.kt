@@ -1,4 +1,4 @@
-package test
+package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.CAStore
 import com.github.OpenICP_BR.ktLib.Certificate
@@ -52,8 +52,8 @@ class RootCAsTest {
     @Test
     fun verifyCert_1() {
         var store = CAStore()
-        var cert_final = Certificate("res/certs/AC_OAB_G3.crt")
-        var cert_intermediate = Certificate("res/certs/AC_Certisign_G7.crt")
+        var cert_final = Certificate("test/res/certs/AC_OAB_G3.crt")
+        var cert_intermediate = Certificate("test/res/certs/AC_Certisign_G7.crt")
 
         assertThrows(NoSuchElementException::class.java) {
             store.verifyCert(cert_final)

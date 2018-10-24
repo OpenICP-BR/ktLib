@@ -1,4 +1,4 @@
-package test
+package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.Certificate
 import org.junit.jupiter.api.Assertions.*
@@ -34,7 +34,7 @@ class CertificateTest {
 
     @Test
     fun loadFromFile_1() {
-        var cert = Certificate("res/certs/ICP-Brasil.crt")
+        var cert = Certificate("test/res/certs/ICP-Brasil.crt")
         assertTrue(cert.isSelfSigned())
         assertEquals("", cert.personId)
         assertEquals("Autoridade Certificadora Raiz Brasileira v1", cert.subjectName)
@@ -53,7 +53,7 @@ class CertificateTest {
     }
 
     fun loadFromFile_2() {
-        var cert = Certificate("res/certs/AC_OAB_G3.crt")
+        var cert = Certificate("test/res/certs/AC_OAB_G3.crt")
         assertTrue(cert.isSelfSigned())
         assertEquals("", cert.personId)
         assertEquals("AC OAB G3", cert.subjectName)
@@ -72,14 +72,14 @@ class CertificateTest {
     @Test
     fun loadFromFile_NonExistant() {
         assertThrows(java.io.FileNotFoundException::class.java) {
-            Certificate("res/certs/ICP-Brasil.crt2")
+            Certificate("test/res/certs/ICP-Brasil.crt2")
         }
     }
 
     @Test
     fun loadFromFile_NotCert() {
         assertThrows(org.cryptacular.StreamException::class.java) {
-            var cert = Certificate("res/certs/not_a_certificate.txt")
+            var cert = Certificate("test/res/certs/not_a_certificate.txt")
             assertNull(cert.base)
         }
     }

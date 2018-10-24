@@ -6,7 +6,7 @@
 
     <groupId>com.github.OpenICP_BR</groupId>
     <artifactId>ktLib</artifactId>
-    <version>0.0.9</version>
+    <version>0.0.10</version>
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <testSourceDirectory>${project.basedir}/test</testSourceDirectory>

@@ -7,6 +7,6 @@ fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff)
 val ICPVersion: String
     get() {
         val properties = Properties()
-        properties.load(Certificate::class.java.getResourceAsStream("/info.properties"));
+        properties.load(Certificate::class.java.getResourceAsStream("info.properties"));
         return properties.getProperty("version")
     }

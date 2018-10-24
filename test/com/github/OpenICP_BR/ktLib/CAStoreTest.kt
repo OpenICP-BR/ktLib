@@ -1,4 +1,4 @@
-package test
+package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.CAStore
 import com.github.OpenICP_BR.ktLib.Certificate
@@ -12,7 +12,7 @@ class CAStoreTest {
     @Test
     fun testing_ca_invalid() {
         val store = CAStore()
-        val cert = Certificate("res/certs/ICP-Brasil.crt")
+        val cert = Certificate("test/res/certs/ICP-Brasil.crt")
         assertThrows(IllegalArgumentException::class.java) {
             store.addTestingCA(cert)
         }
