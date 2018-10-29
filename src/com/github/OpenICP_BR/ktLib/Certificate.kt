@@ -98,26 +98,30 @@ class Certificate() {
     }
 
     internal fun finishParsing() {
-        this.parseName(CertUtil.subjectCN(this.base))
-        this.notAfter = this.base!!.notAfter!!
-        this.notBefore = this.base!!.notBefore!!
-        this.issuerName = NameReader(this.base).readIssuer().getValue(StandardAttributeType.CommonName)
-        this.fullSubject = NameReader(this.base).readSubject().toString()
-        this.fullIssuer = NameReader(this.base).readIssuer().toString()
         try {
-            this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
-        } catch (e: Exception) {
-            this.subjectKeyId = ""
-        }
-        try {
-            this.serial = this.base!!.serialNumber.toString(10)
-        } catch (e: Exception) {
-            this.serial = ""
-        }
-        try {
-            this.authorityKeyId = CertUtil.authorityKeyId(this.base).toUpperCase()
-        } catch (e: Exception) {
-            this.authorityKeyId = ""
+            this.parseName(CertUtil.subjectCN(this.base))
+            this.notAfter = this.base!!.notAfter!!
+            this.notBefore = this.base!!.notBefore!!
+            this.issuerName = NameReader(this.base).readIssuer().getValue(StandardAttributeType.CommonName)
+            this.fullSubject = NameReader(this.base).readSubject().toString()
+            this.fullIssuer = NameReader(this.base).readIssuer().toString()
+            try {
+                this.subjectKeyId = CertUtil.subjectKeyId(this.base).toUpperCase()
+            } catch (e: Exception) {
+                this.subjectKeyId = ""
+            }
+            try {
+                this.serial = this.base!!.serialNumber.toString(10)
+            } catch (e: Exception) {
+                this.serial = ""
+            }
+            try {
+                this.authorityKeyId = CertUtil.authorityKeyId(this.base).toUpperCase()
+            } catch (e: Exception) {
+                this.authorityKeyId = ""
+            }
+        } catch (e : Exception) {
+            throw FailedCertificateParsing(e)
         }
     }
 }
