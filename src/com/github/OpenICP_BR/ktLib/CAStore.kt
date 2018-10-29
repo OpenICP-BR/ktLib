@@ -18,6 +18,7 @@ package com.github.OpenICP_BR.ktLib
  */
 
 class CAStore() {
+    // cas = Certificate Authorities (note the plural)
     internal var cas : HashMap<String, Certificate> = HashMap()
 
     init {
