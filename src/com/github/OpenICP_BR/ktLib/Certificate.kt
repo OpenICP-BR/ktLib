@@ -96,7 +96,7 @@ class Certificate() {
                 return
             }
         } catch (e : Exception) {
-            throw FailedToReadCertificateException(e)
+            throw FailedToParseCertificateException(e)
         }
         finishParsing()
     }
@@ -125,7 +125,7 @@ class Certificate() {
                 this.authorityKeyId = ""
             }
         } catch (e : Exception) {
-            throw FailedCertificateParsingException(e)
+            throw FailedToParseCertificateException(e)
         }
     }
 }

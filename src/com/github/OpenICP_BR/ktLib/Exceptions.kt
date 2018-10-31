@@ -15,7 +15,7 @@ open class ICPExceptionWithEncapsulation(
     ): ICPException(code, msg_en, msg_pt) {
 }
 
-class FailedCertificateParsingException(override val exception: Exception) : ICPExceptionWithEncapsulation(
+class FailedToParseCertificateException(override val exception: Exception) : ICPExceptionWithEncapsulation(
         exception,
         "FAILED_TO_PARSE_CERT",
         "failed to parse certificate",

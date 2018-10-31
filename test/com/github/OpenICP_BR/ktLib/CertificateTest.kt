@@ -78,8 +78,8 @@ class CertificateTest {
 
     @Test
     fun loadFromFile_NotCert() {
-        assertThrows(FailedToReadCertificateException::class.java) {
-            var cert = Certificate("test/res/certs/not_a_certificate.txt")
+        assertThrows(FailedToParseCertificateException::class.java) {
+            val cert = Certificate("test/res/certs/not_a_certificate.txt")
             assertNull(cert.base)
         }
     }
