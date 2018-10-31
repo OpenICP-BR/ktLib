@@ -34,3 +34,17 @@ class FailedToReadCertificateException(override val exception: Exception) : ICPE
         "failed to read certificate",
         "falha ao ler certificado") {
 }
+
+class FailedToGetCertificateFromSignatureException(override val exception: Exception) : ICPExceptionWithEncapsulation(
+        exception,
+        "FAILED_TO_GET_CERT_FROM_SIG",
+        "failed to get certificate from signature",
+        "falha ao obter certificado a partir da assinatura") {
+}
+
+class FailedToVerifySignatureException(override val exception: Exception) : ICPExceptionWithEncapsulation(
+        exception,
+        "FAILED_TO_VERIFY_SIG",
+        "failed to verify signature",
+        "falha ao verificar assinatura") {
+}

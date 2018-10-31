@@ -20,14 +20,12 @@ class SignatureTest {
     }
 
     @Test
-    fun signStream1() {
+    fun signString() {
         val p12 = KeyAndCert("test/res/pfx/beltrano.p12", "beltrano")
         val sigBuilder = SignatureBuilder()
         sigBuilder.setMsg("Hello World")
         sigBuilder.setSignerLocation("Emerald City", 0)
         val sig = sigBuilder.finish(p12, true)
-        //val stream = FileOutputStream("~/tmp/test.p7s")
-        //stream.write(sig.base.encoded)
-        //stream.close()
+        assertTrue(sig.verify())
     }
 }
