@@ -50,13 +50,13 @@ class CAStore() {
             ans += cert
             return ans
         }
-        var issuer = getIssuer(cert)
+        val issuer = getIssuer(cert)
         ans += getPath(issuer)
         return ans
     }
 
     fun verifyCert(cert: Certificate) {
-        var path = getPath(cert)
+        val path = getPath(cert)
 
         // Implement verification logic
         for (i in 0..path.size-2) {
@@ -90,7 +90,7 @@ class CAStore() {
             return false
         }
         if (cert.fullSubject != TESTING_ROOT_CA_SUBJECT || cert.fullIssuer != TESTING_ROOT_CA_SUBJECT) {
-            throw IllegalArgumentException("Testing CAs MUST be: "+ TESTING_ROOT_CA_SUBJECT)
+            throw IllegalTestingRootCA()
         }
 
         forceAddCA(cert)

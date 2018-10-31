@@ -90,9 +90,13 @@ class Certificate() {
     }
 
     fun loadFromStream(stream: InputStream) {
-        this.base = CertUtil.readCertificate(stream)
-        if (this.base == null) {
-            return
+        try {
+            this.base = CertUtil.readCertificate(stream)
+            if (this.base == null) {
+                return
+            }
+        } catch (e : Exception) {
+            throw FailedToReadCertificateException(e)
         }
         finishParsing()
     }
@@ -121,7 +125,7 @@ class Certificate() {
                 this.authorityKeyId = ""
             }
         } catch (e : Exception) {
-            throw FailedCertificateParsing(e)
+            throw FailedCertificateParsingException(e)
         }
     }
 }

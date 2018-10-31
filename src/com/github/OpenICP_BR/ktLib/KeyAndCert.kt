@@ -10,8 +10,8 @@ import java.security.KeyPair
 class KeyAndCert {
     lateinit var cert : Certificate
         internal set
-    internal var privateKey : PrivateKey? = null
-    internal var keyPair : KeyPair? = null
+    var privateKey : PrivateKey? = null
+    var keyPair : KeyPair? = null
         get() = KeyPair(this.cert.base!!.publicKey, this.privateKey)
 
     constructor(new_cert: X509CertificateHolder, new_key: PrivateKey) {
