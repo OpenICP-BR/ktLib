@@ -13,7 +13,7 @@ class CAStoreTest {
     fun testing_ca_invalid() {
         val store = CAStore()
         val cert = Certificate("test/res/certs/ICP-Brasil.crt")
-        assertThrows(IllegalArgumentException::class.java) {
+        assertThrows(IllegalTestingRootCA::class.java) {
             store.addTestingCA(cert)
         }
     }

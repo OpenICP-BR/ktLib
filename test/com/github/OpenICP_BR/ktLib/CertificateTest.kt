@@ -78,7 +78,7 @@ class CertificateTest {
 
     @Test
     fun loadFromFile_NotCert() {
-        assertThrows(org.cryptacular.StreamException::class.java) {
+        assertThrows(FailedToReadCertificateException::class.java) {
             var cert = Certificate("test/res/certs/not_a_certificate.txt")
             assertNull(cert.base)
         }
