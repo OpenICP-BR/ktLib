@@ -7,6 +7,9 @@ import java.security.PrivateKey
 import java.security.cert.X509Certificate
 import java.security.KeyPair
 
+/**
+ * Represents a .pfx or .p12 file. This is, a certificate and the key pair.
+ */
 class KeyAndCert {
     lateinit var cert : Certificate
         internal set

@@ -1,30 +1,22 @@
 package com.github.OpenICP_BR.ktLib
 
-import org.bouncycastle.asn1.ASN1EncodableVector
 import org.bouncycastle.asn1.cms.CMSAttributes
-import org.bouncycastle.asn1.x500.X500Name
-import org.bouncycastle.asn1.x509.X509Name
-import org.bouncycastle.cert.jcajce.JcaCertStore
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
-import java.io.InputStream
-import java.util.*
-import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder
-import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder
-import java.security.cert.X509Certificate
 import org.bouncycastle.asn1.DERUTCTime
 import org.bouncycastle.asn1.ASN1UTCTime
-import org.bouncycastle.asn1.cms.AttributeTable
-import org.bouncycastle.asn1.cms.SignerInfo
 import org.bouncycastle.cms.*
 import java.lang.Exception
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cms.SignerInformation
-import org.bouncycastle.cms.SignerInformationStore
-import org.bouncycastle.jcajce.PKIXCertStoreSelector.getCertificates
 import org.bouncycastle.util.Selector
+import java.util.*
 
-
+/**
+ * Represents a single CAdES signature
+ *
+ * @property base the "raw" signature object used by Bouncy Castle
+ * @property signerId identifies which signature we are talking about.
+ */
 class Signature(val base: CMSSignedData, val signerId: SignerId) {
     val date: Date
         get() {
@@ -46,6 +38,9 @@ class Signature(val base: CMSSignedData, val signerId: SignerId) {
                     "essa assinatura não tem a data de assinatura")
         }
 
+    /**
+     * Verifies if the integrity of this signature. This is, if the message has not been modified. No checks are made as to whether the certificate itself is valid or not.
+     */
     fun verify(): Boolean {
         val signer: SignerInformation
         val cert: X509CertificateHolder
@@ -63,6 +58,9 @@ class Signature(val base: CMSSignedData, val signerId: SignerId) {
         }
     }
 
+    /**
+     * The same as verify(),  but checks all signatures within this.base.
+     */
     internal fun verifyAll(): Boolean {
         val certStore = base.certificates
         val signers = base.signerInfos

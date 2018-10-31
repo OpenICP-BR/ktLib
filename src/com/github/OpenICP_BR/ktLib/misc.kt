@@ -10,12 +10,18 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.Security
 import javax.security.auth.x500.X500Principal
 
+/**
+ * A function that initializes this library. This MUST be called before anything else.
+ */
 fun ICPinit() {
     Security.addProvider(BouncyCastleProvider())
 }
 
 fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
 
+/**
+ * A string representing the current version of this library.
+ */
 val ICPVersion: String
     get() {
         val properties = Properties()
@@ -23,6 +29,6 @@ val ICPVersion: String
         return properties.getProperty("version")
     }
 
-fun javaxX500Principal2BCX509Name(src: X500Principal): X500Name {
+internal fun javaxX500Principal2BCX509Name(src: X500Principal): X500Name {
     return X500Name(src.getName("CANONICAL"))
 }

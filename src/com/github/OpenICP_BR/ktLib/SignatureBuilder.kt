@@ -14,27 +14,53 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder
 import java.security.cert.X509Certificate
 
 
+/**
+ * Generates CAdES signatures.
+ */
 class SignatureBuilder {
     internal var msgArray : CMSProcessableByteArray? = null
     internal var signedAttrs : ASN1EncodableVector? = null
     var alg : String = "SHA256withRSA"
 
+    /**
+     * Sets what message we want to sign.
+     * @param msg the message to be signed.
+     */
     fun setMsg(msg: ByteArray) {
         msgArray = CMSProcessableByteArray(msg)
     }
 
+    /**
+     * Sets what message we want to sign.
+     * @param msg the message to be signed.
+     */
     fun setMsg(msg: InputStream) {
         msgArray = CMSProcessableByteArray(msg.readAllBytes())
     }
 
+    /**
+     * Sets what message we want to sign.
+     * @param msg the message to be signed.
+     */
     fun setMsg(msg: String) {
         msgArray = CMSProcessableByteArray(msg.toByteArray(Charsets.UTF_8))
     }
 
+    /**
+     * Sets the physical location of the signer. (optional signed attribute)
+     * @param city the name of the city/município where the signer is.
+     * @param state the abbreviation of state where the signer is.
+     * @param country the ISO 3166-1 numeric code the country where the signer is.
+     */
     fun setSignerLocation(city: String, state : String, country : Int) {
         setSignerLocation("$city-$state", country)
     }
 
+    /**
+     * Sets the physical location of the signer. (optional signed attribute)
+     * @param locality the name of the place where the signer is.
+     * @param country the ISO 3166-1 numeric code the country where the signer is.
+     */
     fun setSignerLocation(locality: String, country: Int) {
         ensureSignedAttrs()
         val loc = SignerLocation(
@@ -47,12 +73,18 @@ class SignatureBuilder {
         signedAttrs!!.add(attr)
     }
 
-    internal fun ensureSignedAttrs() {
+    private fun ensureSignedAttrs() {
         if (signedAttrs == null) {
             signedAttrs = ASN1EncodableVector()
         }
     }
 
+    /**
+     * Signs the message and the attributes given. The signing time is added automatically.
+     *
+     * @param signer the certificate and private key of the signer.
+     * @param attached if true, the message being signed will be included in the output.
+     */
     fun finish(signer: KeyAndCert, attached: Boolean): Signature {
         val certBase = signer.cert.base!!
         val gen = CMSSignedDataGenerator()

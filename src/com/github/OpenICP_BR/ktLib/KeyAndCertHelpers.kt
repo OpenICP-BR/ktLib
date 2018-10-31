@@ -15,6 +15,9 @@ import java.util.*
 
 val TESTING_ROOT_CA_SUBJECT = "C=BR, CN=FakeICP - SEM VALOR LEGAL"
 
+/**
+ * Generates a new root CA for testing proposes which will be valid from now to one year from now.
+ */
 fun newTestRootCA(): KeyAndCert {
     val now = LocalDate.now()
     val end = now.plusYears(1)
@@ -23,29 +26,62 @@ fun newTestRootCA(): KeyAndCert {
             Date.from(end.atStartOfDay(ZoneId.of("GMT")).toInstant()))
 }
 
+/**
+ * Generates a new root CA for testing proposes.
+ *
+ * @param not_before the date in which the CA starts to be valid.
+ * @param not_after the date in which the CA expires.
+ */
 fun newTestRootCA(not_before: Date, not_after: Date): KeyAndCert {
     return newCert(TESTING_ROOT_CA_SUBJECT, TESTING_ROOT_CA_SUBJECT, null, true, false, not_before, not_after)
 }
 
+/**
+ * Generates a new end-user certificate.
+ *
+ * @param subject the name of the certificate subject.
+ * @param issuer the certificate and private key of the issuer.
+ * @param not_before the date in which the CA starts to be valid.
+ * @param not_after the date in which the CA expires.
+ */
 fun newCert(subject: String, issuer: KeyAndCert, not_before: Date, not_after: Date):
         KeyAndCert {
     return newCert(subject, issuer.cert.fullSubject, issuer.keyPair, false, false, not_before, not_after)
 }
 
+/**
+ * Generates a new timestamping authority certificate.
+ *
+ * @param subject the name of the certificate subject.
+ * @param issuer the certificate and private key of the issuer.
+ * @param not_before the date in which the CA starts to be valid.
+ * @param not_after the date in which the CA expires.
+ */
 fun newTimeStampAuthority(subject: String, issuer: KeyAndCert, not_before: Date, not_after: Date):
         KeyAndCert {
     return newCert(subject, issuer.cert.fullSubject, issuer.keyPair, false, true, not_before, not_after)
 }
 
+/**
+ * Generates a new certificate with a 2048-bit RSA key pair.
+ *
+ * @param subject the name of the certificate subject.
+ * @param issuer the name of the certificate issuer.
+ * @param issuerKeyPair the issuer key pair.
+ * @param ca if true, the certificate will be able to sign other certificates (i.e. be a CA).
+ * @param timestamp if true, the certificate will be allowed to sign timestamps.
+ * @param not_before the date in which the CA starts to be valid.
+ * @param not_after the date in which the CA expires.
+ */
 fun newCert(subject: String, issuer: String, issuerKeyPair: KeyPair?, ca: Boolean, timestamp: Boolean, not_before:
 Date, not_after: Date):
         KeyAndCert {
     // Generate key pair
-    var keyPair = KeyPairGenerator.generateRSA(SecureRandom(), 2048)
-    var subPubKeyInfo = SubjectPublicKeyInfo.getInstance(keyPair.public.encoded);
+    val keyPair = KeyPairGenerator.generateRSA(SecureRandom(), 2048)
+    val subPubKeyInfo = SubjectPublicKeyInfo.getInstance(keyPair.public.encoded);
 
     // Generate certificate
-    var certGen = X509v3CertificateBuilder(
+    val certGen = X509v3CertificateBuilder(
             X500Name(issuer),
             BigInteger.ONE,
             not_before,
@@ -88,7 +124,7 @@ Date, not_after: Date):
             ExtendedKeyUsage(extendedUsages).encoded))
 
     // Sign certificate
-    var signer : ContentSigner
+    val signer : ContentSigner
     if (issuerKeyPair != null) {
         // Not self signed
         signer = JcaContentSignerBuilder("SHA1WithRSA").build(issuerKeyPair.private)
@@ -96,7 +132,7 @@ Date, not_after: Date):
         // Self signed
         signer = JcaContentSignerBuilder("SHA1WithRSA").build(keyPair.private)
     }
-    var cert = certGen.build(signer)
+    val cert = certGen.build(signer)
 
     //Finish
     return KeyAndCert(cert, keyPair.private)
