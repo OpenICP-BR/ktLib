@@ -32,6 +32,10 @@ class KeyAndCert {
         return this.privateKey != null
     }
 
+    fun save(path: String, password: String) {
+
+    }
+
     constructor(path: String, password: String) : this(path, password, password) {
     }
 

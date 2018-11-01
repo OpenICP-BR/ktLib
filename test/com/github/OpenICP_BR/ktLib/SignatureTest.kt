@@ -2,7 +2,6 @@ package com.github.OpenICP_BR.ktLib
 
 import com.github.OpenICP_BR.ktLib.CAStore
 import com.github.OpenICP_BR.ktLib.Certificate
-import com.github.OpenICP_BR.ktLib.newTestRootCA
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test

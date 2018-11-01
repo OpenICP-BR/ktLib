@@ -1,5 +1,8 @@
 package com.github.OpenICP_BR.ktLib
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
+import org.bouncycastle.asn1.x500.style.BCStyle
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
 import org.cryptacular.util.CertUtil
 import org.cryptacular.x509.KeyUsageBits
 import org.cryptacular.x509.dn.NameReader
@@ -31,6 +34,8 @@ class Certificate() {
     var fullIssuer: String = ""
         internal set
     internal var base: X509Certificate? = null
+    val baseHolder: JcaX509CertificateHolder
+    get() = JcaX509CertificateHolder(base)
 
     constructor(raw_cert: X509Certificate) : this() {
         this.base = raw_cert
@@ -126,6 +131,15 @@ class Certificate() {
             }
         } catch (e : Exception) {
             throw FailedToParseCertificateException(e)
+        }
+    }
+
+    internal fun getSubjectPart(part: ASN1ObjectIdentifier): String? {
+        try {
+            val base = this.baseHolder.subject!!.getRDNs(part)
+            return base[0]!!.first!!.value.toString()
+        } catch (e: Exception) {
+            return null
         }
     }
 }
