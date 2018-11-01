@@ -9,6 +9,7 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder
 import org.bouncycastle.cert.X509CertificateHolder
 import org.bouncycastle.cms.SignerInformation
 import org.bouncycastle.util.Selector
+import java.io.File
 import java.util.*
 
 /**
@@ -76,5 +77,9 @@ class Signature(val base: CMSSignedData, val signerId: SignerId) {
             }
         }
         return true
+    }
+
+    fun save(path: String) {
+        File(path).writeBytes(this.base.encoded)
     }
 }
