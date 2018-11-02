@@ -1,5 +1,9 @@
 target
 ICP/target
+
+tmp
+
+
 # Created by https://www.gitignore.io/api/vim,java,emacs,linux,macos,kotlin,windows,intellij,sublimetext
 
 ### Emacs ###
