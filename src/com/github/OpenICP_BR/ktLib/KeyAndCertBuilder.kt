@@ -4,16 +4,26 @@ import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x500.X500NameBuilder
 import org.bouncycastle.asn1.x500.style.BCStyle
 import org.bouncycastle.asn1.x509.*
+import org.bouncycastle.cert.X509ExtensionUtils
 import org.bouncycastle.cert.X509v3CertificateBuilder
+import org.bouncycastle.crypto.digests.SHA1Digest
+import org.bouncycastle.jcajce.provider.digest.SHA1
 import org.bouncycastle.operator.ContentSigner
+import org.bouncycastle.operator.DigestCalculator
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.cryptacular.generator.KeyPairGenerator
+import org.cryptacular.x509.ExtensionReader
 import java.math.BigInteger
 import java.security.KeyPair
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
+import org.bouncycastle.asn1.oiw.OIWObjectIdentifiers
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier
+import org.bouncycastle.operator.bc.BcDigestCalculatorProvider
+
+
 
 class KeyAndCertBuilder {
     var isRoot: Boolean = false
@@ -86,6 +96,18 @@ class KeyAndCertBuilder {
                 notAfter,
                 subjectNameBuilder.build(),
                 subPubKeyInfo)
+
+        // Calculate and add key identifiers
+        val digCalc = BcDigestCalculatorProvider().get(AlgorithmIdentifier(OIWObjectIdentifiers.idSHA1))
+        val utils = X509ExtensionUtils(digCalc)
+        val subjectKey = utils.createSubjectKeyIdentifier(subPubKeyInfo)
+        certGen.addExtension(Extension.subjectKeyIdentifier, false, subjectKey.toASN1Primitive())
+
+        var authorityKey = subjectKey.keyIdentifier
+        if (issuer != null) {
+            authorityKey = ExtensionReader(issuer!!.cert.base).readSubjectKeyIdentifier().keyIdentifier
+        }
+        certGen.addExtension(Extension.authorityKeyIdentifier, false, AuthorityKeyIdentifier(authorityKey).toASN1Primitive())
 
         // Set key usages
         var extendedUsages = arrayOf<KeyPurposeId>()

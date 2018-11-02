@@ -11,6 +11,26 @@ import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KeyAndCertTest {
+    fun build_all_certs() {
+        var builder = KeyAndCertBuilder()
+        builder.isRoot = true
+        builder.isCA = true
+        val root = builder.build()
+        root.save("test/res/pfx/root.p12", "root")
+
+        builder = KeyAndCertBuilder()
+        builder.issuer = root
+        builder.subjectCN = "Ciclano Gonçalves Müler:00000000000"
+        builder.subjectEmail = "c.gonçalves@example.com"
+        builder.build().save("test/res/pfx/ciclano.p12", "ciclano")
+        builder.subjectCN = "Beltrano Freitas:00000000000"
+        builder.subjectEmail = "beltrano@example.com"
+        builder.build().save("test/res/pfx/beltrano.p12", "beltrano")
+        builder.subjectCN = "Fulano Silva:00000000000"
+        builder.subjectEmail = "fulano@example.com"
+        builder.build().save("test/res/pfx/fulano.p12", "fulano")
+    }
+
     @Test
     fun build_certs() {
         var builder = KeyAndCertBuilder()
@@ -28,7 +48,7 @@ class KeyAndCertTest {
         var file: File
         file = File("test/res/pfx/root2.p12")
         if (file.exists()) file.delete()
-        file = File("test/res/pfx/cicalno2.p12")
+        file = File("test/res/pfx/ciclano2.p12")
         if (file.exists()) file.delete()
     }
 
