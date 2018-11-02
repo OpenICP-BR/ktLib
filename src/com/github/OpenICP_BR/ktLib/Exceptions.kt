@@ -13,6 +13,10 @@ open class ICPExceptionWithEncapsulation(
         override val msg_en: String,
         override val msg_pt: String
     ): ICPException(code, msg_en, msg_pt) {
+
+    override val cause: Throwable?
+        get() = exception
+
 }
 
 class FailedToParseCertificateException(override val exception: Exception) : ICPExceptionWithEncapsulation(
