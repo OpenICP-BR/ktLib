@@ -25,6 +25,7 @@ class SignatureTest {
         sigBuilder.setMsg("Hello World")
         sigBuilder.setSignerLocation("Emerald City", 0)
         val sig = sigBuilder.finish(p12, true)
+        sig.save(("test.sig"))
         assertTrue(sig.verify())
     }
 }

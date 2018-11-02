@@ -51,9 +51,9 @@ class RootCAsTest {
 
     @Test
     fun verifyCert_1() {
-        var store = CAStore()
-        var cert_final = Certificate("test/res/certs/AC_OAB_G3.crt")
-        var cert_intermediate = Certificate("test/res/certs/AC_Certisign_G7.crt")
+        val store = CAStore()
+        val cert_final = Certificate("test/res/certs/AC_OAB_G3.crt")
+        val cert_intermediate = Certificate("test/res/certs/AC_Certisign_G7.crt")
 
         assertThrows(NoSuchElementException::class.java) {
             store.verifyCert(cert_final)

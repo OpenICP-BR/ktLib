@@ -46,8 +46,13 @@ class Signature(val base: CMSSignedData, val signerId: SignerId) {
         val signer: SignerInformation
         val cert: X509CertificateHolder
 
+
         try {
-            signer = base.signerInfos[signerId]
+            if (base.signerInfos.size() == 1) {
+                signer = base.signerInfos.signers.iterator().next()
+            } else {
+                signer = base.signerInfos[signerId]
+            }
             cert = base.certificates.getMatches(signer.sid as Selector<X509CertificateHolder>).iterator().next()
         } catch (e: Exception) {
             throw FailedToGetCertificateFromSignatureException(e)

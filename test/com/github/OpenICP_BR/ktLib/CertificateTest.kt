@@ -28,13 +28,13 @@ class CertificateTest {
 
     @Test
     fun isSelfSigned() {
-        var cert = Certificate()
+        val cert = Certificate()
         assertFalse(cert.isSelfSigned())
     }
 
     @Test
     fun loadFromFile_1() {
-        var cert = Certificate("test/res/certs/ICP-Brasil.crt")
+        val cert = Certificate("test/res/certs/ICP-Brasil.crt")
         assertTrue(cert.isSelfSigned())
         assertEquals("", cert.personId)
         assertEquals("Autoridade Certificadora Raiz Brasileira v1", cert.subjectName)
@@ -46,15 +46,16 @@ class CertificateTest {
         assertEquals("C=BR, O=ICP-Brasil, OU=Instituto Nacional de Tecnologia da Informacao - ITI, CN=Autoridade " +
                 "Certificadora Raiz Brasileira v1", cert.fullSubject)
 
-        var formatter = SimpleDateFormat("yyyy-MM-dd H:m:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd H:m:ss")
         formatter.timeZone = TimeZone.getTimeZone("GMT")
         assertEquals("2008-07-29 19:17:10", formatter.format(cert.notBefore))
         assertEquals("2021-07-29 19:17:10", formatter.format(cert.notAfter))
     }
 
+    @Test
     fun loadFromFile_2() {
-        var cert = Certificate("test/res/certs/AC_OAB_G3.crt")
-        assertTrue(cert.isSelfSigned())
+        val cert = Certificate("test/res/certs/AC_OAB_G3.crt")
+        assertFalse(cert.isSelfSigned())
         assertEquals("", cert.personId)
         assertEquals("AC OAB G3", cert.subjectName)
         assertEquals("AC Certisign G7", cert.issuerName)
@@ -63,7 +64,7 @@ class CertificateTest {
         assertEquals("C=BR, O=ICP-Brasil, OU=Autoridade Certificadora Raiz Brasileira v5, CN=AC Certisign G7", cert.fullIssuer)
         assertEquals("C=BR, O=ICP-Brasil, OU=ORDEM DOS ADVOGADOS DO BRASIL CONSELHO FEDERAL, CN=AC OAB G3", cert.fullSubject)
 
-        var formatter = SimpleDateFormat("yyyy-MM-dd H:m:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         formatter.timeZone = TimeZone.getTimeZone("GMT")
         assertEquals("2016-11-19 02:00:00", formatter.format(cert.notBefore))
         assertEquals("2029-03-01 03:00:00", formatter.format(cert.notAfter))

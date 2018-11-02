@@ -26,6 +26,7 @@ class KeyAndCertBuilder {
     var notBefore: Date
     var notAfter: Date
     var subjectCN: String = ""
+    var subjectEmail: String = ""
     val subjectC: String
         get() = issuer?.cert?.getSubjectPart(BCStyle.C) ?: TESTING_ROOT_CA_SUBJECT_C
     val subjectO: String
@@ -72,7 +73,7 @@ class KeyAndCertBuilder {
         if (subjectO != "") subjectNameBuilder.addRDN(BCStyle.O, subjectO)
         if (subjectOU != "") subjectNameBuilder.addRDN(BCStyle.OU, subjectOU)
         if (subjectCN != "") subjectNameBuilder.addRDN(BCStyle.CN, subjectCN)
-
+        if (subjectEmail != "") subjectNameBuilder.addRDN(BCStyle.EmailAddress, subjectEmail)
 
         // Get our keys
         this.generateKeyPair()
