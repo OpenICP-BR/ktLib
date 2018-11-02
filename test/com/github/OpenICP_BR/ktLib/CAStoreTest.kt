@@ -22,7 +22,6 @@ class CAStoreTest {
     fun testing_ca_valid() {
         val store = CAStore()
         val pfx = newTestRootCA()
-        println(pfx.cert.fullSubject)
         assertTrue(store.addTestingCA(pfx.cert))
     }
 }
