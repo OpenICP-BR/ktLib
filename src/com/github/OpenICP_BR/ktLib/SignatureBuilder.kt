@@ -1,34 +1,22 @@
 package com.github.OpenICP_BR.ktLib
 
-import org.bouncycastle.asn1.*
+import org.bouncycastle.asn1.ASN1EncodableVector
+import org.bouncycastle.asn1.DERSet
+import org.bouncycastle.asn1.DERUTF8String
 import org.bouncycastle.asn1.cms.AttributeTable
 import org.bouncycastle.asn1.esf.SignerLocation
 import org.bouncycastle.asn1.pkcs.Attribute
-import java.io.InputStream
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.cert.jcajce.JcaCertStore
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
 import org.bouncycastle.cms.*
+import org.bouncycastle.cms.SignerInformation
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder
-import java.security.cert.X509Certificate
-import org.bouncycastle.cms.CMSProcessableByteArray
-import jdk.internal.jimage.decompressor.StringSharingDecompressor.getEncoded
-import org.bouncycastle.cms.SignerInformationStore
-import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder
-import org.bouncycastle.cms.CMSSignedDataGenerator
-import org.bouncycastle.cms.SignerInformation
-import org.bouncycastle.operator.DigestCalculatorProvider
-import org.bouncycastle.cms.CMSSignedData
-import java.io.IOException
-import org.bouncycastle.cms.CMSException
-import java.security.GeneralSecurityException
-import org.bouncycastle.operator.OperatorCreationException
+import java.io.InputStream
 import java.security.PrivateKey
-
-
-
-
+import java.security.cert.X509Certificate
 
 
 /**
@@ -64,9 +52,9 @@ class SignatureBuilder {
         msgArray = CMSProcessableByteArray(msg.toByteArray(Charsets.UTF_8))
     }
 
-    fun setMsg(msg: CMSSignedData) {
-        msgArray = CMSProcessableByteArray(msg.encoded)
-        this.counter = msg
+    fun setMsg(msg: Signature) {
+        msgArray = CMSProcessableByteArray(msg.base.encoded)
+        this.counter = msg.base
     }
 
     /**
@@ -101,6 +89,8 @@ class SignatureBuilder {
             signedAttrs = ASN1EncodableVector()
         }
     }
+    
+    
 
     /**
      * Signs the message and the attributes given. The signing time is added automatically.
@@ -108,11 +98,11 @@ class SignatureBuilder {
      * @param signer the certificate and private key of the signer.
      * @param attached if true, the message being signed will be included in the output.
      */
-    fun directSign(signer: KeyAndCert, attached: Boolean): Signature {
+    internal fun directSign(signer: KeyAndCert, attachMessage: Boolean): Signature {
         val certBase = signer.cert.base!!
         val gen = CMSSignedDataGenerator()
-        val hashSigner = JcaContentSignerBuilder(this.alg).setProvider("BCFIPS").build(signer.privateKey);
-        val builder = JcaSignerInfoGeneratorBuilder(JcaDigestCalculatorProviderBuilder().setProvider("BCFIPS").build())
+        val hashSigner = JcaContentSignerBuilder(this.alg).setProvider("BC").build(signer.privateKey);
+        val builder = JcaSignerInfoGeneratorBuilder(JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
 
         if (signedAttrs != null) {
             builder.setSignedAttributeGenerator(DefaultSignedAttributeTableGenerator(AttributeTable(signedAttrs)))
@@ -124,34 +114,54 @@ class SignatureBuilder {
         gen.addCertificates(JcaCertStore(certs));
 
         return Signature(
-                gen.generate(msgArray, attached),
+                gen.generate(msgArray, attachMessage),
                 SignerId(
                         javaxX500Principal2BCX509Name(certBase.issuerX500Principal),
                         certBase.serialNumber
                 ))
     }
 
-    fun counterSign(
-            oldSigningCert: X509Certificate,
-            data: ByteArray, newSignerKey: PrivateKey, newSignerCert: X509Certificate): ByteArray {
+    internal fun counterSign(
+            oldSigningCert: X509Certificate?,
+            data: CMSProcessableByteArray,
+            newSignerKey: PrivateKey,
+            newSignerCert: X509Certificate,
+            attachMessage: Boolean): Signature {
 
         var signer = this.counter!!.signerInfos.iterator().next()
 
 
         val counterSignerGen = CMSSignedDataGenerator()
         val digProvider = JcaDigestCalculatorProviderBuilder()
-                .setProvider("BCFIPS").build()
+                .setProvider("BC").build()
         val signerInfoGeneratorBuilder = JcaSignerInfoGeneratorBuilder(digProvider)
         counterSignerGen.addSignerInfoGenerator(signerInfoGeneratorBuilder.build(
                 JcaContentSignerBuilder(this.alg)
-                        .setProvider("BCFIPS").build(newSignerKey),
+                        .setProvider("BC").build(newSignerKey),
                 newSignerCert))
         val counterSigners = counterSignerGen.generateCounterSigners(signer)
         signer = SignerInformation.addCounterSigners(signer, counterSigners)
-        val signerGen = CMSSignedDataGenerator()
-        signerGen.addCertificate(JcaX509CertificateHolder(oldSigningCert))
-        signerGen.addCertificate(JcaX509CertificateHolder(newSignerCert))
-        signerGen.addSigners(SignerInformationStore(signer))
-        return signerGen.generate(CMSProcessableByteArray(data), true).encoded
+        val gen = CMSSignedDataGenerator()
+        if (oldSigningCert != null) {
+            gen.addCertificate(JcaX509CertificateHolder(oldSigningCert))
+        }
+        gen.addCertificate(JcaX509CertificateHolder(newSignerCert))
+        gen.addSigners(SignerInformationStore(signer))
+        gen.generate(data, true).encoded
+
+        return Signature(
+                gen.generate(msgArray, attachMessage),
+                SignerId(
+                        javaxX500Principal2BCX509Name(newSignerCert.issuerX500Principal),
+                        newSignerCert.serialNumber
+                ))
+    }
+
+    fun finish(signer: KeyAndCert, attachMessage: Boolean): Signature {
+        if (this.counter == null) {
+            return directSign(signer, attachMessage)
+        } else {
+            return counterSign(null, msgArray!!, signer.privateKey!!, signer.cert.base!!, attachMessage)
+        }
     }
 }

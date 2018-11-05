@@ -14,8 +14,14 @@ import javax.security.auth.x500.X500Principal
  * A function that initializes this library. This MUST be called before anything else.
  */
 fun ICPinit() {
+    if (inited) {
+        return;
+    }
     Security.addProvider(BouncyCastleProvider())
+    inited = true
 }
+
+internal var inited = false
 
 fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
 
