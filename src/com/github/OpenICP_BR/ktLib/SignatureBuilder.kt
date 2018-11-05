@@ -17,6 +17,10 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder
 import java.io.InputStream
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
+import jdk.internal.jimage.decompressor.StringSharingDecompressor.getEncoded
+import org.bouncycastle.cms.CMSSignedData
+
+
 
 
 /**
@@ -128,33 +132,16 @@ class SignatureBuilder {
             newSignerCert: X509Certificate,
             attachMessage: Boolean): Signature {
 
-        var signer = this.counter!!.signerInfos.iterator().next()
-
-
-        val counterSignerGen = CMSSignedDataGenerator()
-        val digProvider = JcaDigestCalculatorProviderBuilder()
-                .setProvider("BC").build()
-        val signerInfoGeneratorBuilder = JcaSignerInfoGeneratorBuilder(digProvider)
-        counterSignerGen.addSignerInfoGenerator(signerInfoGeneratorBuilder.build(
-                JcaContentSignerBuilder(this.alg)
-                        .setProvider("BC").build(newSignerKey),
-                newSignerCert))
-        val counterSigners = counterSignerGen.generateCounterSigners(signer)
-        signer = SignerInformation.addCounterSigners(signer, counterSigners)
-        val gen = CMSSignedDataGenerator()
-        if (oldSigningCert != null) {
-            gen.addCertificate(JcaX509CertificateHolder(oldSigningCert))
-        }
-        gen.addCertificate(JcaX509CertificateHolder(newSignerCert))
-        gen.addSigners(SignerInformationStore(signer))
-        gen.generate(data, true).encoded
-
-        return Signature(
-                gen.generate(msgArray, attachMessage),
-                SignerId(
-                        javaxX500Principal2BCX509Name(newSignerCert.issuerX500Principal),
-                        newSignerCert.serialNumber
-                ))
+            // Get all previous signers
+            val previewSigners = this.counter!!.signerInfos.signers
+            for (previewSigner in previewSigners) {
+                // build a counter-signature per old signature
+                val previewSignatureFromSigner = previewSigner.signature
+                val cmsCounterSignedData = CMSSignedData(this.doSign(previewSignatureFromSigner))
+                cmsPreviewSignedData = this.updateWithCounterSignature(cmsCounterSignedData, cmsPreviewSignedData,
+                        previewSigner.getSID())
+            }
+            return cmsPreviewSignedData.getEncoded()
     }
 
     fun finish(signer: KeyAndCert, attachMessage: Boolean): Signature {
